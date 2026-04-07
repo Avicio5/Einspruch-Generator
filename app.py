@@ -37,7 +37,7 @@ def create_pdf(name, adresse, steuernummer, finanzamt, datum_bescheid, text):
     pdf.ln(5)
     pdf.cell(0, 10, f"{name}", 0, 1)
     
-    return pdf.output(dest='S').encode('latin-1', 'ignore')
+    return bytes(pdf.output())
 
 # --- STREAMLIT UI ---
 st.set_page_config(page_title="Tax-Insider.de | Einspruch-Generator", page_icon="⚖️")
