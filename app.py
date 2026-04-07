@@ -36,7 +36,7 @@ st.title("Einspruch gegen den Steuerbescheid")
 st.markdown("""
 Jedes Jahr werden Millionen von Steuerbescheiden erlassen – viele davon sind fehlerhaft. 
 Ob veraltete Bodenrichtwerte oder nicht anerkannte Werbungskosten: Ein Einspruch ist oft der einzige Weg zur Korrektur.
-Wir helfen Ihnen, rechtssichere Schreiben basierend auf aktueller Rechtsprechung zu erstellen. Mit nur wenigen Klicks hilft Ihnen der Einspruchs-Generator dabei erfolgreich gegen Ihren fehlerhaften Steuerbescheid vorzugehen.
+Wir helfen Ihnen, rechtssichere Schreiben basierend auf aktueller Rechtsprechung zu erstellen. Mit nur wenigen Klicks hilft Ihnen der Einspruchs-Generator dabei erfolgreich gegen Ihren fehlerhaften Steuerbescheid vorzugehen
 """)
 
 # Das Tool
@@ -83,7 +83,7 @@ if st.button("Schreiben als PDF generieren", use_container_width=True):
     else:
         st.warning("Bitte ergänzen Sie die Basis-Daten für ein vollständiges PDF.")
 
-# --- NEU: HINTERGRUND & MISSION (Dein Text) ---
+# Hintergrund & Mission
 st.divider()
 col1, col2 = st.columns([1, 2])
 with col1:
@@ -97,18 +97,36 @@ with col2:
     Dieses Tool wurde entwickelt, um diese Hürde zu senken. Mein Ziel ist es, Ihnen dabei zu helfen, sich das Geld zurückzuholen, das Ihnen rechtmäßig zusteht. Sie sollen nicht unnötig viel bezahlen, nur weil der Prozess zu kompliziert wirkt.
     """)
 
-# SEO / FAQ Bereich
+# WISSENSWERTES ZUM RECHTSBEHELF (Wiederhergestellt auf ausführliche Version)
 st.divider()
-st.subheader("Wissenswertes zum Rechtsbehelf")
-f1, f2 = st.columns(2)
-with f1:
-    st.write("**Fristen:** In der Regel haben Sie einen Monat Zeit nach Erhalt des Bescheids.")
-    st.write("**Kosten:** Das Verfahren beim Finanzamt ist für Sie kostenlos.")
-with f2:
-    st.write("**Erfolgsaussichten:** Ein Einspruch führt oft zu einer erneuten, detaillierten Prüfung durch die Fachabteilung.")
-    st.write("**ELSTER:** Sie können das generierte PDF auch einfach als Anhang via ELSTER senden.")
+st.subheader("Häufig gestellte Fragen zum Einspruch")
 
-# Footer
+col_info1, col_info2 = st.columns(2)
+
+with col_info1:
+    st.markdown("""
+    **Wie lange habe ich Zeit?** Die Einspruchsfrist beträgt in der Regel einen Monat nach Bekanntgabe des Bescheids. 
+    Es ist ratsam, den Poststempel oder das Datum der elektronischen Bereitstellung (ELSTER) zu prüfen.
+    
+    **Was kostet ein Einspruch?** Das außergerichtliche Rechtsbehelfsverfahren beim Finanzamt ist grundsätzlich kostenlos. 
+    Es fallen keine Gebühren an, es sei denn, Sie beauftragen einen Steuerberater.
+    """)
+
+with col_info2:
+    st.markdown("""
+    **Was passiert nach dem Einspruch?** Das Finanzamt prüft den Fall erneut in vollem Umfang. Dies kann zu einer Abhilfe (Erfolg) 
+    oder einer Einspruchsentscheidung führen. Achtung: Eine 'Verböserung' ist theoretisch möglich.
+    
+    **Kann ich den Einspruch zurücknehmen?** Ja, ein Einspruch kann jederzeit zurückgenommen werden, solange noch keine endgültige 
+    Entscheidung getroffen wurde.
+    """)
+
+# FOOTER (Wiederhergestellt auf exakte Vorversion)
 st.divider()
-st.markdown("<div style='text-align: center; color: gray; font-size: 0.8em;'>© 2026 Steuer-Portal | Fachliche Unterstützung durch Experten der Finanzverwaltung | <a href='#'>Impressum</a></div>", unsafe_allow_html=True)
-  
+st.markdown("""
+<div style="text-align: center; color: gray; font-size: 0.8em;">
+    Dieses Projekt wird von Experten aus dem Bereich der Finanzverwaltung begleitet, 
+    um Bürgern einen einfachen Zugang zu rechtssicheren Vorlagen zu ermöglichen. <br>
+    © 2026 Steuer-Portal | <a href='#'>Impressum</a> | <a href='#'>Datenschutz</a>
+</div>
+""", unsafe_allow_html=True)
