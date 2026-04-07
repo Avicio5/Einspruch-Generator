@@ -39,7 +39,7 @@ Ob veraltete Bodenrichtwerte bei der Grundsteuer oder nicht anerkannte Werbungsk
 um eine Korrektur zu erwirken. 
 
 Dieses Portal bietet Ihnen fundierte Informationen zu aktuellen Rechtsentwicklungen und hilft Ihnen, 
-formgerechte Schreiben für Ihr Finanzamt zu erstellen.
+formgerechte Schreiben für Ihr Finanzamt zu erstellen. Mit nur wenigen Klicks hilft Ihnen der Einspruchs-Generator dabei erfolgreich einen Einspruch bei Ihrem Finanzamt einzulegen.
 """)
 
 # Das Tool - eingebettet in die Seite
@@ -101,7 +101,7 @@ with col_info1:
     **Wie lange habe ich Zeit?** Die Einspruchsfrist beträgt in der Regel einen Monat nach Bekanntgabe des Bescheids. 
     Es ist ratsam, den Poststempel oder das Datum der elektronischen Bereitstellung (ELSTER) zu prüfen.
     
-    **Was kostet ein Einspruch?** Das außergerichtliche Rechtsbehelfsverfahren beim Finanzamt ist grundsätzlich kostenlos. 
+    **Was kostet ein Einspruch?** Das außergerichtliche Rechtsbehelfsverfahren (Einspruchsverfahren) beim Finanzamt ist grundsätzlich kostenlos. 
     Es fallen keine Gebühren an, es sei denn, Sie beauftragen einen Steuerberater.
     """)
 
