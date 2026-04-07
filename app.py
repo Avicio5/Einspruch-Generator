@@ -105,19 +105,23 @@ col_info1, col_info2 = st.columns(2)
 
 with col_info1:
     st.markdown("""
-    **Wie lange habe ich Zeit?** Die Einspruchsfrist beträgt in der Regel einen Monat nach Bekanntgabe des Bescheids. 
+    **Wie lange habe ich Zeit?** 
+    Die Einspruchsfrist beträgt in der Regel einen Monat nach Bekanntgabe des Bescheids. 
     Es ist ratsam, den Poststempel oder das Datum der elektronischen Bereitstellung (ELSTER) zu prüfen.
     
-    **Was kostet ein Einspruch?** Das außergerichtliche Rechtsbehelfsverfahren beim Finanzamt ist grundsätzlich kostenlos. 
+    **Was kostet ein Einspruch?** 
+    Das außergerichtliche Rechtsbehelfsverfahren beim Finanzamt ist grundsätzlich kostenlos. 
     Es fallen keine Gebühren an, es sei denn, Sie beauftragen einen Steuerberater.
     """)
 
 with col_info2:
     st.markdown("""
-    **Was passiert nach dem Einspruch?** Das Finanzamt prüft den Fall erneut in vollem Umfang. Dies kann zu einer Abhilfe (Erfolg) 
+    **Was passiert nach dem Einspruch?** 
+    Das Finanzamt prüft den Fall erneut in vollem Umfang. Dies kann zu einer Abhilfe (Erfolg) 
     oder einer Einspruchsentscheidung führen. Achtung: Eine 'Verböserung' ist theoretisch möglich.
     
-    **Kann ich den Einspruch zurücknehmen?** Ja, ein Einspruch kann jederzeit zurückgenommen werden, solange noch keine endgültige 
+    **Kann ich den Einspruch zurücknehmen?** 
+    Ja, ein Einspruch kann jederzeit zurückgenommen werden, solange noch keine endgültige 
     Entscheidung getroffen wurde.
     """)
 
