@@ -4,7 +4,7 @@ from datetime import datetime
 from streamlit_gsheets import GSheetsConnection
 import pandas as pd
 
-# --- PDF GENERATOR LOGIK ---
+# --- PDF GENERATOR ---
 class SteuerPDF(FPDF):
     def header(self):
         self.set_font('Arial', 'B', 10)
@@ -31,124 +31,80 @@ def create_pdf(name, adresse, steuernummer, finanzamt, datum_bescheid, text, bet
     return bytes(pdf.output())
 
 # --- UI SETUP ---
-st.set_page_config(page_title="Steuer-Einspruch | Fachportal & Analyse", layout="centered")
+st.set_page_config(page_title="Steuer-Einspruch | Fachportal", layout="centered")
 
-# Verbindung zur Google Tabelle
+# VERSUCH DER VERBINDUNG
+conn = None
+connection_error = None
 try:
     conn = st.connection("gsheets", type=GSheetsConnection)
-except:
-    conn = None
+except Exception as e:
+    connection_error = str(e)
 
-# Hero Section
 st.title("Einspruch gegen den Steuerbescheid")
-st.markdown("""
-Jedes Jahr werden Millionen von Steuerbescheiden erlassen – viele davon sind fehlerhaft. 
-Ob veraltete Bodenrichtwerte oder nicht anerkannte Werbungskosten: Ein Einspruch ist oft der einzige Weg zur Korrektur.
-Wir helfen Ihnen, rechtssichere Schreiben basierend auf aktueller Rechtsprechung zu erstellen.
-""")
+st.markdown("Helfen Sie sich selbst bei fehlerhaften Steuerbescheiden.")
 
-# Das Tool
+# Formular
 st.divider()
 col_left, col_right = st.columns(2)
-
 with col_left:
     u_name = st.text_input("Name")
     u_adresse = st.text_area("Anschrift", height=100)
     u_snr = st.text_input("Steuernummer / ID")
-
 with col_right:
     u_fa = st.text_input("Zuständiges Finanzamt")
-    fall = st.selectbox("Grund des Einspruchs:", [
-        "Grundsteuer: Wertfeststellung (Bodenrichtwert)",
-        "Kapitalerträge: Verlustverrechnung § 20 Abs. 6",
-        "Kryptowährungen: Haltefrist § 23",
-        "Allgemeine Fristwahrung"
-    ])
+    fall = st.selectbox("Grund:", ["Grundsteuer: Wertfeststellung (Bodenrichtwert)", "Allgemeine Fristwahrung"])
     u_datum = st.date_input("Datum des Bescheids")
 
-# Begründungs-Logik
-if "Grundsteuer" in fall:
-    betreff = "Einspruch gegen den Bescheid über den Grundsteuerwert"
-    text = "hiermit lege ich Einspruch gegen den Feststellungsbescheid ein. Es bestehen Zweifel an der rechtmäßigen Ermittlung der Bodenrichtwerte (§ 247 BewG). Um eine Fehlbewertung auszuschließen, wird um Überprüfung gebeten."
-    tipp = "Hinweis: Ein Einspruch gegen die Grundsteuer hält den Bescheid offen, falls die Bewertungsmethodik später durch den BFH für verfassungswidrig erklärt wird."
-elif "Kapitalerträge" in fall:
-    betreff = "Einspruch gegen ESt-Bescheid (Kapitalerträge)"
-    text = "hiermit lege ich Einspruch ein. Die Beschränkung der Verlustverrechnung bei Termingeschäften wird im Hinblick auf laufende Verfahren (BFH VIII R 11/22) beanstandet. Ich beantrage das Ruhen des Verfahrens."
-    tipp = "Tipp: Die Angabe des BFH-Aktenzeichens (VIII R 11/22) ist hier entscheidend für eine schnelle Bearbeitung."
-elif "Krypto" in fall:
-    betreff = "Einspruch gegen ESt-Bescheid (Kryptowerte)"
-    text = "hiermit lege ich Einspruch ein. Die Veräußerungsgeschäfte mit Kryptowerten wurden fälschlicherweise als steuerpflichtig behandelt, obwohl die einjährige Haltefrist (§ 23 EStG) überschritten war."
-    tipp = "Wichtig: Achten Sie darauf, die Anschaffungs- und Veräußerungsdaten im Zweifel nachweisen zu können."
-else:
-    betreff = "Einspruch gegen den Steuerbescheid"
-    text = "hiermit lege ich fristwahrend Einspruch ein. Eine ausführliche Begründung wird nachgereicht."
-    tipp = "Wichtig: Ein fristwahrender Einspruch stoppt die 1-Monats-Frist sofort."
+# Texte festlegen
+betreff = "Einspruch gegen Steuerbescheid"
+text = "Hiermit lege ich Einspruch ein..."
 
-with st.expander("Vorschau der rechtlichen Begründung"):
-    st.write(text)
-    st.caption(f"💡 {tipp}")
-
-# Download & Zähler
 if st.button("Schreiben als PDF generieren", use_container_width=True):
-    if u_name and u_snr and u_fa:
+    if u_name and u_snr:
+        # Versuch in Tabelle zu schreiben
         if conn:
             try:
                 new_row = pd.DataFrame([{"Zeitstempel": datetime.now().strftime("%Y-%m-%d %H:%M:%S"), "Fall": fall}])
                 existing_data = conn.read(worksheet="Downloads")
                 updated_df = pd.concat([existing_data, new_row], ignore_index=True)
                 conn.update(worksheet="Downloads", data=updated_df)
-            except:
-                pass 
+            except Exception as e:
+                st.error(f"Fehler beim Speichern in Tabelle: {e}")
+        
         pdf_out = create_pdf(u_name, u_adresse, u_snr, u_fa, u_datum, text, betreff)
-        st.download_button("Datei jetzt speichern", data=pdf_out, file_name="Einspruchsschreiben.pdf", mime="application/pdf")
+        st.download_button("Datei jetzt speichern", data=pdf_out, file_name="Einspruch.pdf")
     else:
-        st.warning("Bitte ergänzen Sie die Basis-Daten für ein vollständiges PDF.")
+        st.warning("Bitte Namen und Steuernummer ausfüllen.")
 
 # Hintergrund & Mission
 st.divider()
-col1, col2 = st.columns([1, 2])
-with col1:
-    st.subheader("Hintergrund & Mission")
-with col2:
-    st.markdown("""
-    *„Ich arbeite beim Finanzamt und ärgere mich täglich, wie so viele Menschen Geld auf der Straße liegen lassen, weil sie nicht gegen ihre falschen Steuerbescheide vorgehen. Viele Menschen haben immer noch Angst davor sich gegen die Finanzbehörde zustellen. Diese Tool wurde entwickelt, um den Menschen dabei zu helfen sich das Geld zurück zu holen, dass ihnen auch zusteht und nicht unnötig zu viel zu bezahlen.“*
-    """)
+st.subheader("Hintergrund & Mission")
+st.markdown("""*„Ich arbeite beim Finanzamt und ärgere mich täglich, wie so viele Menschen Geld auf der Straße liegen lassen...“*""")
 
-# Häufig gestellte Fragen (Wissenswertes)
+# FAQ & Impressum (gekürzt für Übersicht)
 st.divider()
-st.subheader("Häufig gestellte Fragen zum Einspruch")
-col_info1, col_info2 = st.columns(2)
-with col_info1:
-    st.markdown("""
-    **Wie lange habe ich Zeit?** Die Einspruchsfrist beträgt in der Regel einen Monat nach Bekanntgabe des Bescheids. 
-    Es ist ratsam, den Poststempel oder das Datum der elektronischen Bereitstellung (ELSTER) zu prüfen.
-    
-    **Was kostet ein Einspruch?** Das außergerichtliche Rechtsbehelfsverfahren beim Finanzamt ist grundsätzlich kostenlos. 
-    Es fallen keine Gebühren an, es sei denn, Sie beauftragen einen Steuerberater.
-    """)
-with col_info2:
-    st.markdown("""
-    **Was passiert nach dem Einspruch?** Das Finanzamt prüft den Fall erneut in vollem Umfang. Dies kann zu einer Abhilfe (Erfolg) 
-    oder einer Einspruchsentscheidung führen. Achtung: Eine 'Verböserung' ist theoretisch möglich.
-    
-    **Kann ich den Einspruch zurücknehmen?** Ja, ein Einspruch kann jederzeit zurückgenommen werden, solange noch keine endgültige 
-    Entscheidung getroffen wurde.
-    """)
+st.markdown("<div style='text-align: center; color: gray; font-size: 0.8em;'>© 2026 Steuer-Portal | <a href='#'>Impressum</a></div>", unsafe_allow_html=True)
 
-# Footer (Korrekt formatierter HTML-Bereich)
+# --- INTERNER BEREICH MIT FEHLERSUCHE ---
 st.divider()
-st.markdown("<div style='text-align: center; color: gray; font-size: 0.8em;'>Dieses Projekt wird von Experten aus dem Bereich der Finanzverwaltung begleitet, um Bürgern einen einfachen Zugang zu rechtssicheren Vorlagen zu ermöglichen. <br> © 2026 Steuer-Portal | <a href='#'>Impressum</a> | <a href='#'>Datenschutz</a></div>", unsafe_allow_html=True)
-
-# Admin Bereich
-with st.expander("Interner Bereich"):
-    pw = st.text_input("PIN eingeben", type="password")
+with st.expander("Interner Bereich (Admin)"):
+    pw = st.text_input("PIN eingeben (Standard: 1234)", type="password")
+    
     if pw == "1234":
+        st.success("PIN korrekt!")
         if conn:
             try:
                 stats = conn.read(worksheet="Downloads")
                 st.metric("Gesamte Downloads", len(stats))
-                st.dataframe(stats.tail(10))
-            except:
-                st.write("Verbindung zur Tabelle steht noch nicht.")
-    else:
-        st.write("Zugriff beschränkt.")
+                st.dataframe(stats)
+            except Exception as e:
+                st.error(f"Verbindung zur Tabelle fehlgeschlagen. Fehler: {e}")
+                st.info("Hinweis: Prüfe, ob das Tabellenblatt wirklich 'Downloads' heißt.")
+        else:
+            st.error("Keine Google-Sheets Verbindung konfiguriert.")
+            if connection_error:
+                st.code(connection_error)
+            st.info("Checke deine 'Secrets' im Streamlit Dashboard!")
+    elif pw != "":
+        st.error("PIN falsch.")
