@@ -1,10 +1,8 @@
 import streamlit as st
 from fpdf import FPDF
-from datetime import datetime
-from streamlit_gsheets import GSheetsConnection
-import pandas as pd
+from datetime import date
 
-# --- PDF LOGIK (Stabil für moderne fpdf2 Version) ---
+# --- PDF LOGIK ---
 class SteuerPDF(FPDF):
     def header(self):
         self.set_font('Arial', 'B', 10)
@@ -14,47 +12,43 @@ def create_pdf(name, adresse, steuernummer, finanzamt, datum_bescheid, text, bet
     pdf = SteuerPDF()
     pdf.add_page()
     pdf.set_font("Arial", size=11)
-    # Absender
     pdf.multi_cell(0, 5, f"{name}\n{adresse}")
     pdf.ln(10)
-    # Empfänger
     pdf.multi_cell(0, 5, f"An das\nFinanzamt {finanzamt}")
     pdf.ln(10)
-    # Datum & Betreff
-    pdf.cell(0, 10, f"Datum: {datetime.now().strftime('%d.%m.%Y')}", 0, 1, 'R')
+    pdf.cell(0, 10, f"Datum: {date.today().strftime('%d.%m.%Y')}", 0, 1, 'R')
     pdf.set_font("Arial", 'B', 11)
     pdf.cell(0, 10, f"{betreff} vom {datum_bescheid.strftime('%d.%m.%Y')}", 0, 1)
     pdf.cell(0, 5, f"Steuernummer: {steuernummer}", 0, 1)
     pdf.ln(10)
-    # Textinhalt
     pdf.set_font("Arial", size=11)
     pdf.multi_cell(0, 6, f"Sehr geehrte Damen und Herren,\n\n{text}")
     pdf.ln(15)
     pdf.cell(0, 10, "Mit freundlichen Grüßen", 0, 1)
     pdf.cell(0, 10, f"{name}", 0, 1)
-    return pdf.output() # Fix: Kein dest='S' mehr nötig bei fpdf2
+    return bytes(pdf.output())
 
-# --- UI SETUP ---
-st.set_page_config(page_title="Steuer-Einspruch Generator", layout="centered")
+# --- UI DESIGN ---
+st.set_page_config(page_title="Steuer-Einspruch | Fachportal & Analyse", layout="centered")
 
-# Verbindung zur Tabelle (Optionaler Check, damit App nicht abstürzt)
-conn = None
-try:
-    conn = st.connection("gsheets", type=GSheetsConnection)
-except:
-    conn = None
-
+# Hero Section
 st.title("Einspruch gegen den Steuerbescheid")
-st.markdown("Nutzen Sie dieses Tool, um rechtssichere Einsprüche zu generieren.")
+st.markdown("""
+Jedes Jahr werden Millionen von Steuerbescheiden erlassen – viele davon sind fehlerhaft. 
+Ob veraltete Bodenrichtwerte oder nicht anerkannte Werbungskosten: Ein Einspruch ist oft der einzige Weg zur Korrektur.
+Wir helfen Ihnen, rechtssichere Schreiben basierend auf aktueller Rechtsprechung zu erstellen.
+""")
 
-# Eingabemaske
+# Das Tool
 st.divider()
-col1, col2 = st.columns(2)
-with col1:
-    u_name = st.text_input("Vollständiger Name")
-    u_adresse = st.text_area("Ihre Anschrift", height=100)
+col_left, col_right = st.columns(2)
+
+with col_left:
+    u_name = st.text_input("Name")
+    u_adresse = st.text_area("Anschrift", height=100)
     u_snr = st.text_input("Steuernummer / ID")
-with col2:
+
+with col_right:
     u_fa = st.text_input("Zuständiges Finanzamt")
     fall = st.selectbox("Grund des Einspruchs:", [
         "Grundsteuer: Wertfeststellung (Bodenrichtwert)",
@@ -64,72 +58,75 @@ with col2:
     ])
     u_datum = st.date_input("Datum des Bescheids")
 
-# Logik für die Texte
+# Begründungs-Logik
 if "Grundsteuer" in fall:
     betreff = "Einspruch gegen den Bescheid über den Grundsteuerwert"
     text = "hiermit lege ich Einspruch gegen den Feststellungsbescheid ein. Es bestehen Zweifel an der rechtmäßigen Ermittlung der Bodenrichtwerte (§ 247 BewG). Um eine Fehlbewertung auszuschließen, wird um Überprüfung gebeten."
+    tipp = "Hinweis: Ein Einspruch gegen die Grundsteuer hält den Bescheid offen, falls die Bewertungsmethodik später durch den BFH für verfassungswidrig erklärt wird."
 elif "Kapitalerträge" in fall:
     betreff = "Einspruch gegen ESt-Bescheid (Kapitalerträge)"
     text = "hiermit lege ich Einspruch ein. Die Beschränkung der Verlustverrechnung bei Termingeschäften wird im Hinblick auf laufende Verfahren (BFH VIII R 11/22) beanstandet. Ich beantrage das Ruhen des Verfahrens."
-elif "Krypto" in fall:
-    betreff = "Einspruch gegen ESt-Bescheid (Kryptowerte)"
-    text = "hiermit lege ich Einspruch ein. Die Veräußerungsgeschäfte mit Kryptowerten wurden fälschlicherweise als steuerpflichtig behandelt, obwohl die einjährige Haltefrist (§ 23 EStG) überschritten war. Ich bitte um Prüfung der Anschaffungsdaten."
+    tipp = "Tipp: Die Angabe des BFH-Aktenzeichens (VIII R 11/22) ist hier entscheidend für eine schnelle Bearbeitung."
 else:
     betreff = "Einspruch gegen den Steuerbescheid"
-    text = "hiermit lege ich fristwahrend Einspruch gegen den oben genannten Bescheid ein. Eine ausführliche Begründung wird nachgereicht."
+    text = "hiermit lege ich fristwahrend Einspruch ein. Eine ausführliche Begründung wird nachgereicht."
+    tipp = "Wichtig: Ein fristwahrender Einspruch stoppt die 1-Monats-Frist sofort."
 
-# Vorschau & PDF Download
-st.divider()
-with st.expander("Vorschau der Begründung"):
+with st.expander("Vorschau der rechtlichen Begründung"):
     st.write(text)
+    st.caption(f"💡 {tipp}")
 
 if st.button("Schreiben als PDF generieren", use_container_width=True):
     if u_name and u_snr and u_fa:
-        # 1. In Google Tabelle loggen
-        if conn:
-            try:
-                new_row = pd.DataFrame([{"Zeitstempel": datetime.now().strftime("%d.%m.%Y %H:%M"), "Fall": fall}])
-                old_data = conn.read(worksheet="Downloads")
-                updated_df = pd.concat([old_data, new_row], ignore_index=True)
-                conn.update(worksheet="Downloads", data=updated_df)
-            except:
-                pass # Falls Tabelle fehlschlägt, machen wir trotzdem das PDF
-        
-        # 2. PDF Erstellung
-        pdf_bytes = create_pdf(u_name, u_adresse, u_snr, u_fa, u_datum, text, betreff)
-        st.download_button("📥 Jetzt PDF herunterladen", data=pdf_bytes, file_name="Einspruch.pdf", mime="application/pdf")
-        st.success("PDF wurde erfolgreich erstellt!")
+        pdf_out = create_pdf(u_name, u_adresse, u_snr, u_fa, u_datum, text, betreff)
+        st.download_button("Datei jetzt speichern", data=pdf_out, file_name="Einspruchsschreiben.pdf", mime="application/pdf")
     else:
-        st.warning("Bitte füllen Sie alle Felder aus.")
+        st.warning("Bitte ergänzen Sie die Basis-Daten für ein vollständiges PDF.")
 
-# Mission & Hintergrund
+# Hintergrund & Mission
 st.divider()
-st.subheader("Hintergrund & Mission")
-st.markdown("*„Ich arbeite beim Finanzamt und ärgere mich täglich, wie so viele Menschen Geld auf der Straße liegen lassen, weil sie nicht gegen ihre falschen Steuerbescheide vorgehen. Viele Menschen haben immer noch Angst davor sich gegen die Finanzbehörde zustellen. Diese Tool wurde entwickelt, um den Menschen dabei zu helfen sich das Geld zurück zu holen, dass ihnen auch zusteht und nicht unnötig zu viel zu bezahlen.“*")
+col1, col2 = st.columns([1, 2])
+with col1:
+    st.subheader("Hintergrund & Mission")
+with col2:
+    st.markdown(f"""
+    *„Als Mitarbeiter in der Finanzverwaltung ärgere ich mich täglich darüber, wie viele Menschen Geld auf der Straße liegen lassen, weil sie fehlerhafte Steuerbescheide einfach akzeptieren.“*
+    
+    Viele Bürger haben Hemmungen oder schlichtweg Angst davor, sich gegen eine Behörde zu stellen. Doch ein Steuerbescheid ist kein unumstößliches Gesetz, sondern ein Verwaltungsakt, der fehleranfällig ist. 
+    
+    Dieses Tool wurde entwickelt, um diese Hürde zu senken. Mein Ziel ist es, Ihnen dabei zu helfen, sich das Geld zurückzuholen, das Ihnen rechtmäßig zusteht. Sie sollen nicht unnötig viel bezahlen, nur weil der Prozess kompliziert wirkt.
+    """)
 
-# FAQ Bereich
+# WISSENSWERTES ZUM RECHTSBEHELF (Wiederhergestellt auf ausführliche Version)
 st.divider()
-st.subheader("Wissenswertes")
-c1, c2 = st.columns(2)
-with c1:
-    st.write("**Frist:** Ein Monat nach Bekanntgabe.")
-    st.write("**Kosten:** Das Verfahren beim Finanzamt ist kostenlos.")
-with c2:
-    st.write("**Verböserung:** Das Amt muss Sie warnen, wenn es teurer werden könnte.")
-    st.write("**Rücknahme:** Sie können den Einspruch jederzeit zurückziehen.")
+st.subheader("Häufig gestellte Fragen zum Einspruch")
 
-# Footer
+col_info1, col_info2 = st.columns(2)
+
+with col_info1:
+    st.markdown("""
+    **Wie lange habe ich Zeit?** Die Einspruchsfrist beträgt in der Regel einen Monat nach Bekanntgabe des Bescheids. 
+    Es ist ratsam, den Poststempel oder das Datum der elektronischen Bereitstellung (ELSTER) zu prüfen.
+    
+    **Was kostet ein Einspruch?** Das außergerichtliche Rechtsbehelfsverfahren beim Finanzamt ist grundsätzlich kostenlos. 
+    Es fallen keine Gebühren an, es sei denn, Sie beauftragen einen Steuerberater.
+    """)
+
+with col_info2:
+    st.markdown("""
+    **Was passiert nach dem Einspruch?** Das Finanzamt prüft den Fall erneut in vollem Umfang. Dies kann zu einer Abhilfe (Erfolg) 
+    oder einer Einspruchsentscheidung führen. Achtung: Eine 'Verböserung' ist theoretisch möglich.
+    
+    **Kann ich den Einspruch zurücknehmen?** Ja, ein Einspruch kann jederzeit zurückgenommen werden, solange noch keine endgültige 
+    Entscheidung getroffen wurde.
+    """)
+
+# FOOTER (Wiederhergestellt auf exakte Vorversion)
 st.divider()
-st.markdown("<div style='text-align: center; color: gray; font-size: 0.8em;'>© 2026 Steuer-Portal | <a href='#'>Impressum</a> | <a href='#'>Datenschutz</a></div>", unsafe_allow_html=True)
-
-# Admin Bereich
-with st.expander("Interner Bereich"):
-    pin = st.text_input("PIN", type="password")
-    if pin == "1234":
-        if conn:
-            try:
-                data = conn.read(worksheet="Downloads")
-                st.metric("Gesamte Downloads", len(data))
-                st.dataframe(data.tail(10))
-            except Exception as e:
-                st.error(f"Tabellen-Fehler: {e}")
+st.markdown("""
+<div style="text-align: center; color: gray; font-size: 0.8em;">
+    Dieses Projekt wird von Experten aus dem Bereich der Finanzverwaltung begleitet, 
+    um Bürgern einen einfachen Zugang zu rechtssicheren Vorlagen zu ermöglichen. <br>
+    © 2026 Steuer-Portal | <a href='#'>Impressum</a> | <a href='#'>Datenschutz</a>
+</div>
+""", unsafe_allow_html=True)
