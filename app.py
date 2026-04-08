@@ -14,19 +14,15 @@ def create_pdf(name, adresse, steuernummer, finanzamt, datum_bescheid, text, bet
     pdf = SteuerPDF()
     pdf.add_page()
     pdf.set_font("Arial", size=11)
-    # Absender
     pdf.multi_cell(0, 5, f"{name}\n{adresse}")
     pdf.ln(10)
-    # Empfänger
     pdf.multi_cell(0, 5, f"An das\nFinanzamt {finanzamt}")
     pdf.ln(10)
-    # Datum & Betreff
     pdf.cell(0, 10, f"Datum: {datetime.now().strftime('%d.%m.%Y')}", 0, 1, 'R')
     pdf.set_font("Arial", 'B', 11)
     pdf.cell(0, 10, f"{betreff} vom {datum_bescheid.strftime('%d.%m.%Y')}", 0, 1)
     pdf.cell(0, 5, f"Steuernummer: {steuernummer}", 0, 1)
     pdf.ln(10)
-    # Text
     pdf.set_font("Arial", size=11)
     pdf.multi_cell(0, 6, f"Sehr geehrte Damen und Herren,\n\n{text}")
     pdf.ln(15)
@@ -37,7 +33,7 @@ def create_pdf(name, adresse, steuernummer, finanzamt, datum_bescheid, text, bet
 # --- UI SETUP ---
 st.set_page_config(page_title="Steuer-Einspruch | Fachportal & Analyse", layout="centered")
 
-# Verbindung zur Google Tabelle (muss in Streamlit Secrets konfiguriert sein)
+# Verbindung zur Google Tabelle
 try:
     conn = st.connection("gsheets", type=GSheetsConnection)
 except:
@@ -48,7 +44,7 @@ st.title("Einspruch gegen den Steuerbescheid")
 st.markdown("""
 Jedes Jahr werden Millionen von Steuerbescheiden erlassen – viele davon sind fehlerhaft. 
 Ob veraltete Bodenrichtwerte oder nicht anerkannte Werbungskosten: Ein Einspruch ist oft der einzige Weg zur Korrektur.
-Wir helfen Ihnen, rechtssichere Schreiben basierend auf aktueller Rechtsprechung zu erstellen.Mit nur wenigen Klicks hilft Ihnen der Einspruchs-Generator dabei erfolgreich gegen Ihren fehlerhaften Steuerbescheid vorzugehen
+Wir helfen Ihnen, rechtssichere Schreiben basierend auf aktueller Rechtsprechung zu erstellen.
 """)
 
 # Das Tool
@@ -70,7 +66,7 @@ with col_right:
     ])
     u_datum = st.date_input("Datum des Bescheids")
 
-# Begründungs-Logik & Insider-Tipps
+# Begründungs-Logik
 if "Grundsteuer" in fall:
     betreff = "Einspruch gegen den Bescheid über den Grundsteuerwert"
     text = "hiermit lege ich Einspruch gegen den Feststellungsbescheid ein. Es bestehen Zweifel an der rechtmäßigen Ermittlung der Bodenrichtwerte (§ 247 BewG). Um eine Fehlbewertung auszuschließen, wird um Überprüfung gebeten."
@@ -92,10 +88,9 @@ with st.expander("Vorschau der rechtlichen Begründung"):
     st.write(text)
     st.caption(f"💡 {tipp}")
 
-# Download & Zähler-Logik
+# Download & Zähler
 if st.button("Schreiben als PDF generieren", use_container_width=True):
     if u_name and u_snr and u_fa:
-        # Zähler in Google Tabelle loggen
         if conn:
             try:
                 new_row = pd.DataFrame([{"Zeitstempel": datetime.now().strftime("%Y-%m-%d %H:%M:%S"), "Fall": fall}])
@@ -104,25 +99,20 @@ if st.button("Schreiben als PDF generieren", use_container_width=True):
                 conn.update(worksheet="Downloads", data=updated_df)
             except:
                 pass 
-        
-        # PDF Erstellung
         pdf_out = create_pdf(u_name, u_adresse, u_snr, u_fa, u_datum, text, betreff)
         st.download_button("Datei jetzt speichern", data=pdf_out, file_name="Einspruchsschreiben.pdf", mime="application/pdf")
     else:
         st.warning("Bitte ergänzen Sie die Basis-Daten für ein vollständiges PDF.")
 
-# Hintergrund & Mission (Dein Text)
+# Hintergrund & Mission
 st.divider()
 col1, col2 = st.columns([1, 2])
 with col1:
     st.subheader("Hintergrund & Mission")
 with col2:
-    st.markdown(f"""
-    *„Als Mitarbeiter in der Finanzverwaltung ärgere ich mich täglich darüber, wie viele Menschen Geld auf der Straße liegen lassen, weil sie fehlerhafte Steuerbescheide einfach akzeptieren.“
-
-Viele Bürger haben Hemmungen oder schlichtweg Angst davor, sich gegen eine Behörde zu stellen. Doch ein Steuerbescheid ist kein unumstößliches Gesetz, sondern ein Verwaltungsakt, der fehleranfällig ist.
-
-Dieses Tool wurde entwickelt, um diese Hürde zu senken. Mein Ziel ist es, Ihnen dabei zu helfen, sich das Geld zurückzuholen, das Ihnen rechtmäßig zusteht. Sie sollen nicht unnötig viel bezahlen, nur weil der Prozess zu kompliziert wirkt.
+    st.markdown("""
+    *„Ich arbeite beim Finanzamt und ärgere mich täglich, wie so viele Menschen Geld auf der Straße liegen lassen, weil sie nicht gegen ihre falschen Steuerbescheide vorgehen. Viele Menschen haben immer noch Angst davor sich gegen die Finanzbehörde zustellen. Diese Tool wurde entwickelt, um den Menschen dabei zu helfen sich das Geld zurück zu holen, dass ihnen auch zusteht und nicht unnötig zu viel zu bezahlen.“*
+    """)
 
 # Häufig gestellte Fragen (Wissenswertes)
 st.divider()
@@ -145,25 +135,20 @@ with col_info2:
     Entscheidung getroffen wurde.
     """)
 
-# Footer (Exakter Text wie gewünscht)
+# Footer (Korrekt formatierter HTML-Bereich)
 st.divider()
-st.markdown("""
-<div style="text-align: center; color: gray; font-size: 0.8em;">
-    Dieses Projekt wird von Experten aus dem Bereich der Finanzverwaltung begleitet, 
-    um Bürgern einen einfachen Zugang zu rechtssicheren Vorlagen zu ermöglichen. <br>
-    © 2026 Steuer-Portal | <a href='#'>Impressum</a> | <a href='#'>Datenschutz</a>
-</div>
-""", unsafe_allow_html=True)
+st.markdown("<div style='text-align: center; color: gray; font-size: 0.8em;'>Dieses Projekt wird von Experten aus dem Bereich der Finanzverwaltung begleitet, um Bürgern einen einfachen Zugang zu rechtssicheren Vorlagen zu ermöglichen. <br> © 2026 Steuer-Portal | <a href='#'>Impressum</a> | <a href='#'>Datenschutz</a></div>", unsafe_allow_html=True)
 
 # Admin Bereich
 with st.expander("Interner Bereich"):
     pw = st.text_input("PIN eingeben", type="password")
-    if pw == "1234" and conn:
-        try:
-            stats = conn.read(worksheet="Downloads")
-            st.metric("Gesamte Downloads", len(stats))
-            st.dataframe(stats.tail(10))
-        except:
-            st.write("Tabelle noch leer oder nicht verbunden.")
+    if pw == "1234":
+        if conn:
+            try:
+                stats = conn.read(worksheet="Downloads")
+                st.metric("Gesamte Downloads", len(stats))
+                st.dataframe(stats.tail(10))
+            except:
+                st.write("Verbindung zur Tabelle steht noch nicht.")
     else:
         st.write("Zugriff beschränkt.")
