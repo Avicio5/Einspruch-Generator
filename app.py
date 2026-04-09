@@ -120,16 +120,6 @@ with col_info2:
     **Kann ich den Einspruch zurücknehmen?** Ja, ein Einspruch kann jederzeit zurückgenommen werden, solange noch keine endgültige 
     Entscheidung getroffen wurde.
     """)
-
-# FOOTER (Wiederhergestellt auf exakte Vorversion)
-st.divider()
-st.markdown("""
-<div style="text-align: center; color: gray; font-size: 0.8em;">
-    Dieses Projekt wird von Experten aus dem Bereich der Finanzverwaltung begleitet, 
-    um Bürgern einen einfachen Zugang zu rechtssicheren Vorlagen zu ermöglichen. <br>
-    © 2026 Steuer-Portal | <a href='#'>Impressum</a> | <a href='#'>Datenschutz</a>
-</div>
-""", unsafe_allow_html=True)
 # --- SEO TEXTE (Unter dem Generator einfügen) ---
 st.divider()
 st.header("Ratgeber: Einspruch gegen den Steuerbescheid")
@@ -160,3 +150,13 @@ st.markdown("""
 3. **PDF generieren:** Laden Sie das fertige Schreiben herunter.
 4. **Versenden:** Drucken Sie das Dokument aus und schicken Sie es per Post oder Fax an Ihr Finanzamt.
 """)
+# FOOTER (Wiederhergestellt auf exakte Vorversion)
+st.divider()
+st.markdown("""
+<div style="text-align: center; color: gray; font-size: 0.8em;">
+    Dieses Projekt wird von Experten aus dem Bereich der Finanzverwaltung begleitet, 
+    um Bürgern einen einfachen Zugang zu rechtssicheren Vorlagen zu ermöglichen. <br>
+    © 2026 Steuer-Portal | <a href='#'>Impressum</a> | <a href='#'>Datenschutz</a>
+</div>
+""", unsafe_allow_html=True)
+
