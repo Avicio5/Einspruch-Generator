@@ -3,12 +3,10 @@ from fpdf import FPDF
 from datetime import datetime
 
 # --- 1. SEO & META SETTINGS ---
-# Diese Informationen nutzt Google für die Suchergebnisse
 st.set_page_config(
     page_title="Steuer-Einspruch Generator | Kostenlose Hilfe & Vorlagen",
     page_icon="⚖️",
-    layout="centered",
-    initial_sidebar_state="collapsed"
+    layout="centered"
 )
 
 # --- 2. PDF GENERATOR LOGIK (Stabil für fpdf2) ---
@@ -47,9 +45,19 @@ def create_pdf(name, adresse, steuernummer, finanzamt, datum_bescheid, text, bet
 
 # --- 3. HAUPTSEITE UI ---
 st.title("Einspruch gegen den Steuerbescheid")
+
+# Der klassische Eingangstext
 st.markdown("""
 Erstellen Sie hier Ihr rechtssicheres Schreiben. Alle Vorlagen basieren auf aktueller Rechtsprechung 
 und helfen Ihnen, Ihre Rechte gegenüber dem Finanzamt zu wahren.
+""")
+
+# Kleine Anleitung
+st.info("""
+**So einfach funktioniert es:**
+1. Tragen Sie Ihre Daten und die Steuernummer ein.
+2. Wählen Sie den Grund Ihres Einspruchs aus.
+3. Klicken Sie auf 'PDF generieren' und speichern Sie das fertige Schreiben.
 """)
 
 # Eingabe-Sektion
@@ -71,7 +79,7 @@ with col2:
     ])
     u_datum = st.date_input("Datum Ihres Bescheids")
 
-# Vollständige Texte basierend auf Auswahl
+# Vollständige Texte
 if "Grundsteuer" in fall:
     betreff = "Einspruch gegen den Bescheid über den Grundsteuerwert"
     text = (
@@ -123,12 +131,22 @@ if st.button("Schreiben als PDF generieren", use_container_width=True):
     else:
         st.warning("Bitte füllen Sie alle Felder (Name, Anschrift, Steuernummer und Finanzamt) aus.")
 
-# --- 4. RATGEBER-SEKTION ---
+# --- 4. MISSIONSTEXT (Neu formatiert) ---
+st.divider()
+st.subheader("Hintergrund & Mission")
+st.markdown(f"""
+> *"Ich arbeite beim Finanzamt und ärgere mich täglich, wie so viele Menschen Geld auf der Straße liegen lassen, 
+> weil sie nicht gegen ihre falschen Steuerbescheide vorgehen. Viele Menschen haben immer noch Angst davor, 
+> sich gegen die Finanzbehörde zu stellen. Dieses Tool wurde entwickelt, um den Menschen dabei zu helfen, 
+> sich das Geld zurückzuholen, das ihnen zusteht."*
+""")
+
+# --- 5. RATGEBER-SEKTION ---
 st.divider()
 st.header("Ratgeber: Hilfe beim Einspruch gegen das Finanzamt")
 st.write("""
 Ob Grundsteuer, Kryptowährungen oder Werbungskosten – viele Steuerbescheide in Deutschland sind fehlerhaft. 
-Ein Einspruch ist Ihr gutes Recht, um den Bescheid offen zu halten, bis die Rechtslage endgültig geklärt ist.
+Ein Einspruch ist Ihr gutes Recht, um den Bescheid offen zu halten.
 """)
 
 col_a, col_b = st.columns(2)
@@ -136,38 +154,27 @@ with col_a:
     st.subheader("Wann lohnt sich ein Einspruch?")
     st.write("""
     Besonders bei der Grundsteuer und Kryptowährungen gibt es aktuell viele Unklarheiten. 
-    Häufig werden Bodenrichtwerte falsch übernommen oder Haltefristen nicht korrekt berücksichtigt. 
     Ein Einspruch ist kostenlos und hält den Fall rechtlich offen.
     """)
     
     st.subheader("Fristen beachten")
     st.write("""
     Sie haben genau **einen Monat** nach Erhalt des Bescheids Zeit. Danach wird der Bescheid 
-    rechtskräftig und kann nur noch in extremen Ausnahmefällen geändert werden.
+    rechtskräftig.
     """)
 
 with col_b:
     st.subheader("Ist das Verfahren kostenlos?")
     st.write("""
     Ja! Das Einspruchsverfahren beim Finanzamt ist für Sie **vollkommen kostenlos**. 
-    Es entstehen keine Gebühren, solange Sie das Verfahren selbst (ohne Anwalt/Steuerberater) führen.
+    Es entstehen keine staatlichen Gebühren.
     """)
     
-    st.subheader("Was passiert nach dem Einspruch?")
+    st.subheader("Was passiert danach?")
     st.write("""
-    Das Finanzamt prüft den Bescheid in vollem Umfang erneut. Sollte das Ergebnis schlechter ausfallen 
-    ('Verböserung'), muss das Amt Sie warnen. Sie können den Einspruch dann jederzeit zurückziehen.
+    Das Finanzamt prüft den Bescheid erneut. Sollte das Ergebnis schlechter ausfallen 
+    ('Verböserung'), muss das Amt Sie vorher warnen.
     """)
-
-# Mission
-st.divider()
-st.subheader("Hintergrund & Mission")
-st.info(
-    "„Ich arbeite beim Finanzamt und ärgere mich täglich, wie so viele Menschen Geld auf der Straße liegen lassen, "
-    "weil sie nicht gegen ihre falschen Steuerbescheide vorgehen. Viele Menschen haben immer noch Angst davor, "
-    "sich gegen die Finanzbehörde zu stellen. Dieses Tool wurde entwickelt, um den Menschen dabei zu helfen, "
-    "sich das Geld zurückzuholen, das ihnen zusteht.“"
-)
 
 # Footer
 st.divider()
