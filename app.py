@@ -49,7 +49,7 @@ st.title("Einspruch gegen den Steuerbescheid")
 # Der klassische Eingangstext
 st.markdown("""
 Erstellen Sie hier Ihr rechtssicheres Schreiben. Alle Vorlagen basieren auf aktueller Rechtsprechung 
-und helfen Ihnen, Ihre Rechte gegenüber dem Finanzamt zu wahren.
+und helfen Ihnen, Ihre Rechte gegenüber dem Finanzamt zu wahren. In nur wenigen Klicks haben Sie ihren gesetzeskonformen Einspruch.
 """)
 
 # Kleine Anleitung
@@ -135,10 +135,10 @@ if st.button("Schreiben als PDF generieren", use_container_width=True):
 st.divider()
 st.subheader("Hintergrund & Mission")
 st.markdown(f"""
-> *"Ich arbeite beim Finanzamt und ärgere mich täglich, wie so viele Menschen Geld auf der Straße liegen lassen, 
-> weil sie nicht gegen ihre falschen Steuerbescheide vorgehen. Viele Menschen haben immer noch Angst davor, 
-> sich gegen die Finanzbehörde zu stellen. Dieses Tool wurde entwickelt, um den Menschen dabei zu helfen, 
-> sich das Geld zurückzuholen, das ihnen zusteht."*
+> *"Ich arbeite beim Finanzamt und ärgere mich täglich darüber, wie viele Menschen Geld auf der Straße liegen lassen, 
+> weil sie ihre falschen Steuerbescheide einfach akzeptieren. Viele Menschen haben immer noch Angst davor, 
+> sich gegen die Finanzbehörde zu stellen. Doch so ein Steuerbescheid ist kein unumstößliches Gesetz, sondern "nur" ein Verwaltungsakt, der fehleranfällig ist. Dieses Tool soll den Menschen dabei helfen, 
+> sich das Geld zurückzuholen, das ihnen rechtmäßig zusteht. Sie sollen nicht unnötig zu viel bezahlen, nur weil der Prozess zu kompliziert wirkt."*
 """)
 
 # --- 5. RATGEBER-SEKTION ---
@@ -154,13 +154,13 @@ with col_a:
     st.subheader("Wann lohnt sich ein Einspruch?")
     st.write("""
     Besonders bei der Grundsteuer und Kryptowährungen gibt es aktuell viele Unklarheiten. 
-    Ein Einspruch ist kostenlos und hält den Fall rechtlich offen.
+    Ein Einspruch hält den Fall rechtlich offen und gibt ihnen die Möglichkeit für Korrekturen. Sollten Sie der Meinung sein, dass das Finanzamt etwas falsch berücksichtigt hat, lohnt es sich in den meisten Fällen einspruch einzulegen.
     """)
     
     st.subheader("Fristen beachten")
     st.write("""
-    Sie haben genau **einen Monat** nach Erhalt des Bescheids Zeit. Danach wird der Bescheid 
-    rechtskräftig.
+    Ihr Einspruch muss in der Regel spätestens **einen Monat** nach Bekanntgabe des Bescheids beim Finanzamt eingehen. **Wichtig:**Prüfen Sie den Poststempel oder das Datum ihres Bescheides. Rechnen Sie auf dieses Datum **4 Tage** dazu. Dies ist der fiktive Bekanntgabetag ihres Steuerbescheides (sogenannte Bekanntgabefiktion). Bis zu diesem Tag wahren Sie mit ihrem Einspruch die gesetzliche Frist. Danach wird der Bescheid 
+    rechtskräftig und ihr Einspruch wird vom Finanzamt nicht mehr berücksichtigt
     """)
 
 with col_b:
@@ -172,8 +172,8 @@ with col_b:
     
     st.subheader("Was passiert danach?")
     st.write("""
-    Das Finanzamt prüft den Bescheid erneut. Sollte das Ergebnis schlechter ausfallen 
-    ('Verböserung'), muss das Amt Sie vorher warnen.
+    Das Finanzamt prüft ihren Fall erneut. Sollte das Ergebnis schlechter ausfallen 
+    ('Verböserung'), muss das Amt Sie vorher warnen. Sie können dann immernoch ihren Einspruch zurücknehmen und es bleibt bei dem urspünglichen Steuerbescheid.
     """)
 
 # Footer
