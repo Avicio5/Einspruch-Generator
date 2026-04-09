@@ -130,3 +130,33 @@ st.markdown("""
     © 2026 Steuer-Portal | <a href='#'>Impressum</a> | <a href='#'>Datenschutz</a>
 </div>
 """, unsafe_allow_html=True)
+# --- SEO TEXTE (Unter dem Generator einfügen) ---
+st.divider()
+st.header("Ratgeber: Einspruch gegen den Steuerbescheid")
+
+col_a, col_b = st.columns(2)
+
+with col_a:
+    st.subheader("Wann lohnt sich ein Einspruch?")
+    st.write("""
+    Besonders bei der **Grundsteuer** und **Kryptowährungen** gibt es aktuell viele Unklarheiten. 
+    Häufig werden Bodenrichtwerte falsch übernommen oder Haltefristen von über einem Jahr nicht 
+    korrekt berücksichtigt. Ein Einspruch ist Ihr gutes Recht, um den Bescheid offen zu halten, 
+    bis die Rechtslage endgültig geklärt ist.
+    """)
+
+with col_b:
+    st.subheader("Fristen und Kosten")
+    st.write("""
+    Die Einspruchsfrist beträgt in der Regel **einen Monat** nach Erhalt des Bescheids. 
+    Wichtig zu wissen: Das Einspruchsverfahren beim Finanzamt ist für Sie **vollkommen kostenlos**. 
+    Es entstehen keine Gebühren, solange Sie keinen Steuerberater oder Anwalt hinzuziehen.
+    """)
+
+st.subheader("Schritt-für-Schritt Anleitung")
+st.markdown("""
+1. **Daten eingeben:** Tragen Sie Ihren Namen, Anschrift und Steuernummer ein.
+2. **Grund wählen:** Wählen Sie den passenden Fall (z.B. Grundsteuer oder Krypto).
+3. **PDF generieren:** Laden Sie das fertige Schreiben herunter.
+4. **Versenden:** Drucken Sie das Dokument aus und schicken Sie es per Post oder Fax an Ihr Finanzamt.
+""")
