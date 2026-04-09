@@ -3,10 +3,12 @@ from fpdf import FPDF
 from datetime import datetime
 
 # --- 1. SEO & META SETTINGS ---
+# Diese Informationen nutzt Google für die Suchergebnisse
 st.set_page_config(
     page_title="Steuer-Einspruch Generator | Kostenlose Hilfe & Vorlagen",
     page_icon="⚖️",
-    layout="centered"
+    layout="centered",
+    initial_sidebar_state="collapsed"
 )
 
 # --- 2. PDF GENERATOR LOGIK (Stabil für fpdf2) ---
@@ -46,106 +48,126 @@ def create_pdf(name, adresse, steuernummer, finanzamt, datum_bescheid, text, bet
 # --- 3. HAUPTSEITE UI ---
 st.title("Einspruch gegen den Steuerbescheid")
 st.markdown("""
-**Helfen Sie sich selbst bei fehlerhaften Bescheiden.** Erstellen Sie in wenigen Schritten ein 
-rechtssicheres Dokument zum Ausdrucken und Versenden. Kostenlos und ohne Datenspeicherung.
+Erstellen Sie hier Ihr rechtssicheres Schreiben. Alle Vorlagen basieren auf aktueller Rechtsprechung 
+und helfen Ihnen, Ihre Rechte gegenüber dem Finanzamt zu wahren.
 """)
 
-# Eingabemaske
+# Eingabe-Sektion
 st.divider()
 col1, col2 = st.columns(2)
 
 with col1:
     u_name = st.text_input("Vollständiger Name")
-    u_adresse = st.text_area("Anschrift (Straße, PLZ, Ort)", height=100)
-    u_snr = st.text_input("Steuernummer / ID")
+    u_adresse = st.text_area("Ihre Anschrift (Straße, PLZ, Ort)", height=100)
+    u_snr = st.text_input("Steuernummer / Identifikationsnummer")
 
 with col2:
-    u_fa = st.text_input("Zuständiges Finanzamt")
+    u_fa = st.text_input("Name des Finanzamts")
     fall = st.selectbox("Grund des Einspruchs:", [
         "Grundsteuer: Wertfeststellung (Bodenrichtwert)",
         "Kapitalerträge: Verlustverrechnung § 20 Abs. 6",
         "Kryptowährungen: Haltefrist § 23",
-        "Allgemeine Fristwahrung"
+        "Allgemeine Fristwahrung (Begründung folgt)"
     ])
-    u_datum = st.date_input("Datum des Bescheids")
+    u_datum = st.date_input("Datum Ihres Bescheids")
 
-# Vollständige Texte (Original-Version)
+# Vollständige Texte basierend auf Auswahl
 if "Grundsteuer" in fall:
     betreff = "Einspruch gegen den Bescheid über den Grundsteuerwert"
-    text = ("hiermit lege ich Einspruch gegen den Feststellungsbescheid ein. Es bestehen Zweifel an der "
-            "rechtmäßigen Ermittlung der Bodenrichtwerte (§ 247 BewG). Um eine Fehlbewertung auszuschließen, "
-            "wird um Überprüfung gebeten.")
-    tipp = "Hinweis: Ein Einspruch gegen die Grundsteuer hält den Bescheid offen, falls die Bewertungsmethodik später durch den BFH für verfassungswidrig erklärt wird."
+    text = (
+        "hiermit lege ich Einspruch gegen den Feststellungsbescheid über den Grundsteuerwert ein. "
+        "Es bestehen ernsthafte Zweifel an der rechtmäßigen Ermittlung der zugrunde gelegten Bodenrichtwerte (§ 247 BewG). "
+        "Um eine Fehlbewertung meines Grundstücks auszuschließen, wird um eine detaillierte Überprüfung der "
+        "Wertfeststellung gebeten. Zudem verweise ich auf die aktuell laufenden verfassungsrechtlichen Prüfungen."
+    )
 elif "Kapitalerträge" in fall:
-    betreff = "Einspruch gegen ESt-Bescheid (Kapitalerträge)"
-    text = ("hiermit lege ich Einspruch ein. Die Beschränkung der Verlustverrechnung bei Termingeschäften "
-            "wird im Hinblick auf laufende Verfahren (BFH VIII R 11/22) beanstandet. Ich beantrage das Ruhen des Verfahrens.")
-    tipp = "Tipp: Die Angabe des BFH-Aktenzeichens (VIII R 11/22) ist hier entscheidend für eine schnelle Bearbeitung."
+    betreff = "Einspruch gegen den Einkommensteuerbescheid (Kapitalerträge)"
+    text = (
+        "hiermit lege ich Einspruch gegen den oben genannten Bescheid ein. Die steuerliche Behandlung der "
+        "Kapitalerträge, insbesondere die Beschränkung der Verlustverrechnung bei Termingeschäften, wird im Hinblick "
+        "auf die laufenden Verfahren vor dem Bundesfinanzhof (BFH VIII R 11/22) beanstandet. "
+        "Ich beantrage hiermit das Ruhen des Verfahrens bis zu einer endgültigen Entscheidung."
+    )
 elif "Krypto" in fall:
-    betreff = "Einspruch gegen ESt-Bescheid (Kryptowerte)"
-    text = ("hiermit lege ich Einspruch ein. Die Veräußerungsgeschäfte mit Kryptowerten wurden fälschlicherweise "
-            "als steuerpflichtig behandelt, obwohl die einjährige Haltefrist (§ 23 EStG) überschritten war.")
-    tipp = "Wichtig: Achten Sie darauf, die Anschaffungs- und Veräußerungsdaten im Zweifel nachweisen zu können."
+    betreff = "Einspruch gegen den Einkommensteuerbescheid (Kryptowerte)"
+    text = (
+        "hiermit lege ich Einspruch gegen den Bescheid ein. Die Veräußerungsgeschäfte mit Kryptowerten wurden "
+        "fälschlicherweise als steuerpflichtig behandelt. Gemäß § 23 EStG sind private Veräußerungsgeschäfte steuerfrei, "
+        "wenn die Haltefrist von einem Jahr überschritten wurde. Ich bitte um erneute Prüfung der eingereichten "
+        "Anschaffungs- und Veräußerungsdaten."
+    )
 else:
-    betreff = "Einspruch gegen den Steuerbescheid"
-    text = "hiermit lege ich fristwahrend Einspruch ein. Eine ausführliche Begründung wird nachgereicht."
-    tipp = "Wichtig: Ein fristwahrender Einspruch stoppt die 1-Monats-Frist sofort."
+    betreff = "Fristwahrender Einspruch gegen den Steuerbescheid"
+    text = (
+        "hiermit lege ich fristwahrend Einspruch gegen den oben genannten Bescheid ein. "
+        "Zur Vermeidung des Eintritts der Bestandskraft wird dieser Einspruch hiermit form- und fristgerecht erhoben. "
+        "Eine ausführliche Begründung der einzelnen Punkte werde ich Ihnen nach Sichtung meiner Unterlagen "
+        "in einem gesonderten Schreiben zeitnah nachreichen."
+    )
 
-# Vorschau & Download
-with st.expander("Vorschau der Begründung"):
-    st.write(text)
-    st.caption(f"💡 {tipp}")
-
+# PDF Button
+st.divider()
 if st.button("Schreiben als PDF generieren", use_container_width=True):
     if u_name and u_snr and u_fa and u_adresse:
         try:
             pdf_bytes = create_pdf(u_name, u_adresse, u_snr, u_fa, u_datum, text, betreff)
             st.download_button(
-                label="📥 Jetzt PDF herunterladen",
+                label="📥 PDF jetzt herunterladen & speichern",
                 data=pdf_bytes,
-                file_name=f"Einspruch_{datetime.now().strftime('%Y%m%d')}.pdf",
+                file_name=f"Einspruch_{u_name.replace(' ', '_')}.pdf",
                 mime="application/pdf"
             )
-            st.success("Ihr Dokument steht zum Download bereit.")
+            st.success("Ihr Schreiben wurde erfolgreich generiert!")
         except Exception as e:
-            st.error(f"Fehler bei der PDF-Erstellung: {e}")
+            st.error(f"Ein Fehler ist aufgetreten: {e}")
     else:
-        st.warning("Bitte füllen Sie alle Felder aus (Name, Anschrift, Steuernummer und Finanzamt).")
+        st.warning("Bitte füllen Sie alle Felder (Name, Anschrift, Steuernummer und Finanzamt) aus.")
 
-# --- 4. SEO RATGEBER & MISSION ---
+# --- 4. RATGEBER-SEKTION ---
 st.divider()
-st.header("Hintergrund & Mission")
-st.markdown("""
-*„Ich arbeite beim Finanzamt und ärgere mich täglich, wie so viele Menschen Geld auf der Straße liegen lassen, 
-weil sie nicht gegen ihre falschen Steuerbescheide vorgehen. Viele Menschen haben immer noch Angst davor, 
-sich gegen die Finanzbehörde zu stellen. Dieses Tool wurde entwickelt, um den Menschen dabei zu helfen, 
-sich das Geld zurückzuholen, das ihnen auch zusteht und nicht unnötig zu viel zu bezahlen.“*
+st.header("Ratgeber: Hilfe beim Einspruch gegen das Finanzamt")
+st.write("""
+Ob Grundsteuer, Kryptowährungen oder Werbungskosten – viele Steuerbescheide in Deutschland sind fehlerhaft. 
+Ein Einspruch ist Ihr gutes Recht, um den Bescheid offen zu halten, bis die Rechtslage endgültig geklärt ist.
 """)
 
-st.divider()
-st.header("Ratgeber: Häufig gestellte Fragen zum Einspruch")
-col_info1, col_info2 = st.columns(2)
-
-with col_info1:
-    st.subheader("Wie lange habe ich Zeit?")
+col_a, col_b = st.columns(2)
+with col_a:
+    st.subheader("Wann lohnt sich ein Einspruch?")
     st.write("""
-    Die Einspruchsfrist beträgt in der Regel **einen Monat** nach Bekanntgabe des Bescheids. 
-    Ausschlaggebend ist das Datum des Poststempels plus drei Tage (Bekanntgabefiktion).
+    Besonders bei der Grundsteuer und Kryptowährungen gibt es aktuell viele Unklarheiten. 
+    Häufig werden Bodenrichtwerte falsch übernommen oder Haltefristen nicht korrekt berücksichtigt. 
+    Ein Einspruch ist kostenlos und hält den Fall rechtlich offen.
     """)
     
-    st.subheader("Was kostet ein Einspruch?")
+    st.subheader("Fristen beachten")
     st.write("""
-    Das Einspruchsverfahren beim Finanzamt ist **grundsätzlich kostenlos**. Es fallen keine 
-    staatlichen Gebühren an.
+    Sie haben genau **einen Monat** nach Erhalt des Bescheids Zeit. Danach wird der Bescheid 
+    rechtskräftig und kann nur noch in extremen Ausnahmefällen geändert werden.
     """)
 
-with col_info2:
-    st.subheader("Was ist eine 'Verböserung'?")
+with col_b:
+    st.subheader("Ist das Verfahren kostenlos?")
     st.write("""
-    Das Finanzamt prüft den Fall bei einem Einspruch erneut. Sollte das Ergebnis für Sie 
-    schlechter ausfallen, muss das Finanzamt Sie darauf hinweisen und Ihnen die Möglichkeit 
-    geben, den Einspruch zurückzunehmen.
+    Ja! Das Einspruchsverfahren beim Finanzamt ist für Sie **vollkommen kostenlos**. 
+    Es entstehen keine Gebühren, solange Sie das Verfahren selbst (ohne Anwalt/Steuerberater) führen.
     """)
+    
+    st.subheader("Was passiert nach dem Einspruch?")
+    st.write("""
+    Das Finanzamt prüft den Bescheid in vollem Umfang erneut. Sollte das Ergebnis schlechter ausfallen 
+    ('Verböserung'), muss das Amt Sie warnen. Sie können den Einspruch dann jederzeit zurückziehen.
+    """)
+
+# Mission
+st.divider()
+st.subheader("Hintergrund & Mission")
+st.info(
+    "„Ich arbeite beim Finanzamt und ärgere mich täglich, wie so viele Menschen Geld auf der Straße liegen lassen, "
+    "weil sie nicht gegen ihre falschen Steuerbescheide vorgehen. Viele Menschen haben immer noch Angst davor, "
+    "sich gegen die Finanzbehörde zu stellen. Dieses Tool wurde entwickelt, um den Menschen dabei zu helfen, "
+    "sich das Geld zurückzuholen, das ihnen zusteht.“"
+)
 
 # Footer
 st.divider()
