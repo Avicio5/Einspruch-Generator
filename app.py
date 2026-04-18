@@ -19,6 +19,7 @@ hide_style = """
         background-color: #f8f9fa;
     }
     .main .block-container {
+    div[data-baseweb="tab-panel"] { background-color: #ffffff; padding: 2rem; border-radius: 0.5rem; }
         padding-top: 2rem;
     }
     </style>
