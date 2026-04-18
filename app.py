@@ -2,32 +2,24 @@ import streamlit as st
 from fpdf import FPDF
 from datetime import datetime
 
-# --- 1. SEO & META SETTINGS & DESIGN ---
+# --- 1. SEO & META SETTINGS ---
 st.set_page_config(
     page_title="Steuer-Einspruch-Generator | Rechtssicher & Kostenlos",
     page_icon="⚖️",
     layout="centered"
 )
 
-# Custom CSS: Streamlit-Branding verstecken & Design optimieren
+# --- 2. SAUBERES CSS (Nur Branding ausblenden, Layout intakt lassen) ---
 hide_style = """
     <style>
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
     header {visibility: hidden;}
-    .stApp {
-        background-color: #f8f9fa;
-    }
-    .main .block-container {
-    div[data-baseweb="tab-panel"] { background-color: #ffffff; padding: 2rem; border-radius: 0.5rem; }
-        padding-top: 2rem;
-    }
     </style>
 """
 st.markdown(hide_style, unsafe_allow_html=True)
 
-
-# --- 2. PDF GENERATOR LOGIK ---
+# --- 3. PDF GENERATOR LOGIK ---
 class SteuerPDF(FPDF):
     def header(self):
         self.set_font('Arial', 'B', 10)
@@ -62,7 +54,7 @@ def create_pdf(name, adresse, steuernummer, finanzamt, datum_bescheid, text, bet
     return pdf.output()
 
 
-# --- 3. HEADER BEREICH (Above the Fold) ---
+# --- 4. HEADER BEREICH ---
 st.title("⚖️ Dein Einspruch ans Finanzamt")
 st.markdown("""
     ### In 3 Minuten rechtssicher erstellt.
@@ -88,7 +80,7 @@ st.divider()
 st.info("🔒 **100% Datenschutz:** Deine Daten werden lokal in deinem Browser verarbeitet und zu keinem Zeitpunkt auf Servern gespeichert.")
 
 
-# --- 4. DAS FORMULAR (Chunking) ---
+# --- 5. DAS FORMULAR ---
 tab1, tab2, tab3 = st.tabs(["👤 Deine Daten", "🏢 Finanzamt & Bescheid", "💡 Begründung"])
 
 with tab1:
@@ -112,8 +104,7 @@ with tab3:
     ])
 
 
-# --- 5. TEXTLOGIK & GENERIERUNG ---
-# Zuweisung der Texte basierend auf der Auswahl
+# --- 6. TEXTLOGIK & GENERIERUNG ---
 if "Grundsteuer" in fall:
     betreff = "Einspruch gegen den Bescheid über den Grundsteuerwert"
     text = (
@@ -149,7 +140,6 @@ else:
 
 st.divider()
 
-# Der Haupt-Button zum Generieren
 if st.button("Jetzt Einspruch-PDF generieren", type="primary", use_container_width=True):
     if u_name and u_snr and u_fa and u_adresse:
         try:
@@ -167,7 +157,7 @@ if st.button("Jetzt Einspruch-PDF generieren", type="primary", use_container_wid
         st.error("⚠️ Bitte fülle alle Textfelder in den Reitern aus (Name, Anschrift, Steuernummer, Finanzamt).")
 
 
-# --- 6. RATGEBER & MISSION ---
+# --- 7. RATGEBER & MISSION ---
 st.divider()
 st.subheader("Hintergrund & Mission")
 st.markdown("""
@@ -210,7 +200,3 @@ with col_b:
     Das Finanzamt prüft ihren Fall erneut. Sollte das Ergebnis schlechter ausfallen 
     ('Verböserung'), muss das Amt Sie vorher warnen. Sie können ihren Einspruch dann immer noch zurücknehmen. Es wird nichts geändert und es bleibt bei dem ursprünglichen Steuerbescheid. Sie haben also nichts zu verlieren, es kann sich nur für Sie lohnen!
     """)
-
-# Footer
-st.divider()
-st.markdown("<div style='text-align: center; color: gray; font-size: 0.8em;'>© 2026 Steuer-Portal | <a href='#'>Impressum</a> | <a href='#'>Datenschutz</a></div>", unsafe_allow_html=True)
