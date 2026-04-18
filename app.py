@@ -200,3 +200,29 @@ with col_b:
     Das Finanzamt prüft ihren Fall erneut. Sollte das Ergebnis schlechter ausfallen 
     ('Verböserung'), muss das Amt Sie vorher warnen. Sie können ihren Einspruch dann immer noch zurücknehmen. Es wird nichts geändert und es bleibt bei dem ursprünglichen Steuerbescheid. Sie haben also nichts zu verlieren, es kann sich nur für Sie lohnen!
     """)
+# --- 8. RECHTLICHES (IMPRESSUM & DATENSCHUTZ) ---
+st.divider()
+with st.expander("⚖️ Impressum & Datenschutz"):
+    st.markdown("""
+    ### Impressum
+    **Angaben gemäß § 5 TMG:**
+    
+    [Fynn Korbas]  
+    [Sibyllenweg 16]  
+    [46537 Dinslaken]  
+    
+    **Kontakt:** E-Mail: [DEINE E-MAIL-ADRESSE]  
+    Telefon: [DEINE TELEFONNUMMER (OPTIONAL)]
+    
+    **Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV:** [Fynn Korbas]  
+    [Sibyllenweg 16, 46537 Dinslaken]
+    
+    ---
+    
+    ### Datenschutz
+    **1. Datenschutz auf einen Blick** Diese Anwendung verarbeitet personenbezogene Daten (Name, Anschrift, Steuernummer) ausschließlich lokal in Ihrem Browser, um das PDF-Dokument zu erstellen. Es findet **keine Speicherung** dieser Daten auf unseren Servern statt. Sobald Sie die Seite schließen oder neu laden, sind die eingegebenen Daten gelöscht.
+    
+    **2. Hosting** Diese Seite wird über Streamlit Cloud gehostet. Beim Aufruf der Webseite werden IP-Adressen und technische Logfiles durch den Hoster verarbeitet, um den Betrieb sicherzustellen.
+    
+    **3. Haftungsausschluss** Die bereitgestellten Inhalte dienen ausschließlich der allgemeinen Information und stellen **keine Rechtsberatung** oder Steuerberatung dar. Die Nutzung des Generators erfolgt auf eigene Gefahr. Für die inhaltliche Richtigkeit des Einspruchs und die Einhaltung von Fristen ist der Nutzer selbst verantwortlich.
+    """)
