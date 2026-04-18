@@ -202,27 +202,53 @@ with col_b:
     """)
 # --- 8. RECHTLICHES (IMPRESSUM & DATENSCHUTZ) ---
 st.divider()
-with st.expander("⚖️ Impressum & Datenschutz"):
-    st.markdown("""
-    ### Impressum
-    **Angaben gemäß § 5 TMG:**
+
+# Wir nutzen einen Expander, damit die Seite oben clean bleibt
+with st.expander("⚖️ Impressum & Rechtliches"):
     
-    [Fynn Korbas]  
-    [Sibyllenweg 16]  
-    [46537 Dinslaken]  
+    # Überschrift Impressum
+    st.markdown("### Impressum")
     
-    **Kontakt:** E-Mail: [DEINE E-MAIL-ADRESSE]  
-    Telefon: [DEINE TELEFONNUMMER (OPTIONAL)]
+    # Spalten-Layout für eine bessere Übersicht (wie auf Profi-Seiten)
+    col_imp1, col_imp2 = st.columns(2)
     
-    **Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV:** [Fynn Korbas]  
-    [Sibyllenweg 16, 46537 Dinslaken]
+    with col_imp1:
+        st.markdown("**Betreiber & Kontakt**")
+        st.markdown("""
+        **[DEIN NAME / DEINE FIRMA]** [Straße & Hausnummer]  
+        [PLZ & Ort]  
+        
+        📧 [Deine E-Mail Adresse]  
+        🌐 [Deine Website-URL]
+        """)
+
+    with col_imp2:
+        st.markdown("**Verantwortlich für den Inhalt**")
+        st.markdown(f"""
+        Gemäß § 18 Abs. 2 MStV:  
+        **[DEIN NAME]** [Deine Anschrift]
+        """)
+
+    st.divider()
+
+    # Disclaimer / Haftungsausschluss (Wichtig für Steuer-Themen!)
+    st.markdown("### Haftungsausschluss (Disclaimer)")
+    st.info("""
+    **Keine Rechtsberatung:** Die auf dieser Webseite bereitgestellten Inhalte und der PDF-Generator dienen ausschließlich der allgemeinen Information und stellen keine Rechtsberatung oder Steuerberatung im Sinne des Rechtsdienstleistungsgesetzes (RDG) oder Steuerberatungsgesetzes (StBerG) dar. 
     
-    ---
-    
-    ### Datenschutz
-    **1. Datenschutz auf einen Blick** Diese Anwendung verarbeitet personenbezogene Daten (Name, Anschrift, Steuernummer) ausschließlich lokal in Ihrem Browser, um das PDF-Dokument zu erstellen. Es findet **keine Speicherung** dieser Daten auf unseren Servern statt. Sobald Sie die Seite schließen oder neu laden, sind die eingegebenen Daten gelöscht.
-    
-    **2. Hosting** Diese Seite wird über Streamlit Cloud gehostet. Beim Aufruf der Webseite werden IP-Adressen und technische Logfiles durch den Hoster verarbeitet, um den Betrieb sicherzustellen.
-    
-    **3. Haftungsausschluss** Die bereitgestellten Inhalte dienen ausschließlich der allgemeinen Information und stellen **keine Rechtsberatung** oder Steuerberatung dar. Die Nutzung des Generators erfolgt auf eigene Gefahr. Für die inhaltliche Richtigkeit des Einspruchs und die Einhaltung von Fristen ist der Nutzer selbst verantwortlich.
+    Trotz sorgfältiger Prüfung übernehmen wir keine Haftung für die Richtigkeit, Vollständigkeit oder Aktualität der generierten Dokumente. Die Nutzung erfolgt auf eigene Verantwortung. Es wird dringend empfohlen, im Einzelfall einen qualifizierten Steuerberater oder Rechtsanwalt zu konsultieren.
     """)
+
+    st.divider()
+
+    # Datenschutz-Teil (wie besprochen nach unten)
+    st.markdown("### Datenschutz")
+    st.write("""
+    **Umgang mit Ihren Daten:** Ihre Privatsphäre ist uns wichtig. Die von Ihnen in das Formular eingegebenen Daten (Name, Adresse, Steuernummer) werden **ausschließlich lokal in Ihrem Browser** verarbeitet, um das PDF zu erzeugen. 
+    
+    * **Keine Speicherung:** Es findet keine Übertragung oder Speicherung Ihrer persönlichen Daten auf unseren Servern statt.
+    * **Verschlüsselung:** Die Verbindung zu dieser Seite ist per SSL/TLS verschlüsselt.
+    * **Löschung:** Sobald Sie den Browser-Tab schließen oder die Seite neu laden, sind alle Eingaben gelöscht.
+    """)
+    
+    st.caption("Stand: April 2026 | Erstellt mit ❤️ für mehr Steuergerechtigkeit.")
