@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generator | GaragenKapital</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@700;900&family=Plus+Jakarta+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+    <nav>
+        <div class="nav-inner">
+            <a href="index.html" class="nav-logo">
+                <div class="nav-logo-icon">G</div>
+                <div class="nav-logo-text">Garagen<span>Kapital</span></div>
+            </a>
+            <ul class="nav-links">
+                <li><a href="index.html" class="active">Generator</a></li>
+                <li><a href="impressum.html">Impressum</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="page-tag">Tool</div>
+        <h1>PDF-Generator</h1>
+        <p class="subtitle">Erstellen Sie hier Ihr Dokument – schnell, sicher und lokal.</p>
+
+        <div class="card">
+            <div class="form-group">
+                <label>Ihr Name</label>
+                <input type="text" id="userName" placeholder="Max Mustermann">
+            </div>
+            <div class="form-group">
+                <label>Objekt-Bezeichnung</label>
+                <input type="text" id="objectName" placeholder="Garagenpark XY">
+            </div>
+            <button id="generateBtn" class="btn-primary">PDF Generieren & Herunterladen</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
