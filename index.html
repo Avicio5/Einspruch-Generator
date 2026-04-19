@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Generator | GaragenKapital</title>
+    <title>Einspruch-Generator | Rechtssicher & Kostenlos</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@700;900&family=Plus+Jakarta+Sans:wght@300;400;600&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -11,10 +11,10 @@
 <body>
     <nav>
         <div class="nav-inner">
-            <a href="index.html" class="nav-logo">
-                <div class="nav-logo-icon">G</div>
-                <div class="nav-logo-text">Garagen<span>Kapital</span></div>
-            </a>
+            <div class="nav-logo">
+                <div class="nav-logo-icon">⚖️</div>
+                <div class="nav-logo-text">Einspruch<span>Generator</span></div>
+            </div>
             <ul class="nav-links">
                 <li><a href="index.html" class="active">Generator</a></li>
                 <li><a href="impressum.html">Impressum</a></li>
@@ -23,20 +23,86 @@
     </nav>
 
     <div class="container">
-        <div class="page-tag">Tool</div>
-        <h1>PDF-Generator</h1>
-        <p class="subtitle">Erstellen Sie hier Ihr Dokument – schnell, sicher und lokal.</p>
+        <div class="page-tag">Fachportal für Steuerrecht</div>
+        <h1>Dein Einspruch ans Finanzamt</h1>
+        <p class="subtitle">In 3 Minuten rechtssicher erstellt. Kostenlos & ohne Registrierung.</p>
+
+        <div class="alert warning">
+            <strong>⚠️ Achtung:</strong> Die Einspruchsfrist beträgt in der Regel nur <strong>einen Monat</strong> nach Erhalt des Bescheids. Handle jetzt!
+        </div>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="openTab(event, 'tab1')">👤 Deine Daten</button>
+            <button class="tab-btn" onclick="openTab(event, 'tab2')">🏢 Finanzamt</button>
+            <button class="tab-btn" onclick="openTab(event, 'tab3')">💡 Begründung</button>
+        </div>
 
         <div class="card">
-            <div class="form-group">
-                <label>Ihr Name</label>
-                <input type="text" id="userName" placeholder="Max Mustermann">
+            <div id="tab1" class="tab-content active">
+                <h3>Persönliche Informationen</h3>
+                <div class="form-group">
+                    <label>Vollständiger Name</label>
+                    <input type="text" id="u_name" placeholder="Max Mustermann">
+                </div>
+                <div class="form-group">
+                    <label>Ihre Anschrift</label>
+                    <textarea id="u_adresse" placeholder="Musterstraße 1, 12345 Stadt" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Steuernummer / Identifikationsnummer</label>
+                    <input type="text" id="u_snr" placeholder="123/456/78900">
+                </div>
             </div>
-            <div class="form-group">
-                <label>Objekt-Bezeichnung</label>
-                <input type="text" id="objectName" placeholder="Garagenpark XY">
+
+            <div id="tab2" class="tab-content">
+                <h3>Angaben zum Bescheid</h3>
+                <div class="form-group">
+                    <label>Name des Finanzamts</label>
+                    <input type="text" id="u_fa" placeholder="z.B. Finanzamt Berlin-Mitte">
+                </div>
+                <div class="form-group">
+                    <label>Datum des Bescheids</label>
+                    <input type="date" id="u_datum">
+                </div>
             </div>
-            <button id="generateBtn" class="btn-primary">PDF Generieren & Herunterladen</button>
+
+            <div id="tab3" class="tab-content">
+                <h3>Warum legen Sie Einspruch ein?</h3>
+                <div class="form-group">
+                    <label>Wählen Sie den Fall:</label>
+                    <select id="u_fall">
+                        <option value="grundsteuer">Grundsteuer: Wertfeststellung (Bodenrichtwert)</option>
+                        <option value="kapital">Kapitalerträge: Verlustverrechnung § 20 Abs. 6</option>
+                        <option value="krypto">Kryptowährungen: Haltefrist § 23</option>
+                        <option value="allgemein">Allgemeine Fristwahrung (Begründung folgt)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="alert info">
+                🔒 <strong>100% Datenschutz:</strong> Deine Daten bleiben in deinem Browser und werden nicht gespeichert.
+            </div>
+
+            <button id="generateBtn" class="btn-primary">Jetzt Einspruch-PDF generieren</button>
+        </div>
+
+        <div class="guide-section">
+            <hr>
+            <h3>Hintergrund & Mission</h3>
+            <blockquote class="mission-quote">
+                "Ich arbeite beim Finanzamt und ärgere mich täglich darüber, wie viele Menschen Geld auf der Straße liegen lassen... Dieses Tool soll den Menschen dabei helfen, sich das Geld zurückzuholen."
+            </blockquote>
+            
+            <div class="grid-2">
+                <div>
+                    <h4>Wann lohnt sich ein Einspruch?</h4>
+                    <p>Besonders bei Grundsteuer und Krypto gibt es aktuell viele Unklarheiten. Ein Einspruch hält den Fall rechtlich offen.</p>
+                </div>
+                <div>
+                    <h4>Ist das kostenlos?</h4>
+                    <p>Ja! Das Einspruchsverfahren beim Finanzamt ist vollkommen kostenlos. Es entstehen keine staatlichen Gebühren.</p>
+                </div>
+            </div>
         </div>
     </div>
 
